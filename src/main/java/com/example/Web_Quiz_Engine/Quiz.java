@@ -1,8 +1,6 @@
 package com.example.Web_Quiz_Engine;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.validation.annotation.Validated;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -63,7 +61,7 @@ public class Quiz {
     }
 
     public ArrayList<Integer> getAnswer() {
-        return answer== null ? new ArrayList<>() : answer;
+        return answer == null ? new ArrayList<>() : answer;
     }
 
     public void setAnswer(ArrayList<Integer> answer) {
