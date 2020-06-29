@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @RestController
 public class APIController {
@@ -20,8 +21,8 @@ public class APIController {
     public APIController() {
     }
 
-    @PostMapping(path = "/api/quizzes", produces = "application/json")
-    public Quiz addQuiz(@RequestBody Quiz quiz) {
+    @PostMapping(path = "/api/quizzes", consumes = "application/json", produces = "application/json")
+    public Quiz addQuiz(@Valid @RequestBody Quiz quiz) {
         System.out.println("POST " + quiz.getAnswer());
         quiz.setId(quizzes.size());
         quizzes.add(quiz);
@@ -44,11 +45,16 @@ public class APIController {
         return quizzes;
     }
 
-    @PostMapping(path = "/api/quizzes/{id}/solve", produces = "application/json")
-    public Answer postAnswer(@PathVariable int id, @RequestParam("answer") int ans) {
-        int rigthAnswer = quizzes.get(id).getAnswer();
-        System.out.println("RESPONCE " + rigthAnswer);
-        if (ans == rigthAnswer) {
+    @PostMapping(path = "/api/quizzes/{id}/solve", consumes = "application/json", produces = "application/json")
+    public Answer postAnswer(@RequestBody ListOfAnswers answer, @PathVariable int id) {
+        ArrayList<Integer> rightAnswers = quizzes.get(id).getAnswer();
+        System.out.println("ID: " + id);
+        ArrayList<Integer> answers = answer.getAnswer();
+
+        Collections.sort(rightAnswers);
+        Collections.sort(answers);
+        System.out.println("RESPONCE " + rightAnswers.toString());
+        if (answers.equals(rightAnswers)) {
             return goodAnswer;
         } else {
             return badAnswer;
